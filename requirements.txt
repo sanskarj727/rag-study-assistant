@@ -1,0 +1,5 @@
+# Step 1 dependencies only. We'll add more (embeddings, vector store,
+# the LLM client, Streamlit) as we build those pieces in later sessions.
+
+pypdf>=5.0.0        # reads text out of PDF files
+python-dotenv>=1.0.0  # loads API keys from a .env file instead of hardcoding them

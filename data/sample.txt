@@ -1,0 +1,43 @@
+Retrieval-Augmented Generation, usually shortened to RAG, is a way of making a
+language model's answers grounded in a specific set of documents rather than
+relying only on what the model happened to learn during training.
+
+The core idea is simple. Instead of asking a model a question and hoping it
+remembers the right facts, you first search a knowledge base for the pieces of
+text most relevant to the question. You then hand the model both the question
+and those retrieved pieces, and ask it to answer using that material. This has
+two big advantages. First, the model can answer accurately about information
+it never saw during training, such as a company's internal documents or a
+student's own lecture notes. Second, because the answer is grounded in
+specific retrieved text, it is much easier to check where an answer came from
+and to catch cases where the model is making something up.
+
+Building a RAG system involves a few distinct stages. The first stage is
+ingestion: loading raw documents such as PDFs or text files into memory so
+they can be processed. The second stage is chunking: breaking long documents
+into smaller, overlapping pieces, because both the retrieval step and the
+language model work better with focused, bite-sized text rather than an
+entire book at once. The third stage is embedding: converting each chunk of
+text into a list of numbers, called a vector, that captures the meaning of
+that text in a form a computer can compare mathematically. The fourth stage
+is storage: saving those vectors in a vector database so they can be searched
+quickly later on.
+
+Once a system is built and its documents are indexed, answering a question
+works differently. The user's question is also converted into a vector using
+the same embedding process. The system then searches the vector database for
+the stored chunks whose vectors are most similar to the question's vector,
+under the assumption that similar meaning produces similar vectors. The
+handful of most similar chunks, usually somewhere between three and ten of
+them, are pulled out and inserted into a prompt alongside the original
+question. That combined prompt is sent to a language model, which reads the
+retrieved chunks and writes an answer grounded in them.
+
+A well-built RAG system needs careful attention at every stage. Chunks that
+are too large waste space and dilute relevance, while chunks that are too
+small lose important context. Overlap between chunks helps prevent an
+important sentence from being awkwardly split in half at a chunk boundary.
+The choice of embedding model affects how well semantically similar text is
+recognised as similar. And the way retrieved chunks are formatted into the
+final prompt affects how well the language model actually uses them rather
+than ignoring them in favour of its own prior knowledge.
